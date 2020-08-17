@@ -8,9 +8,16 @@ import {requestTokenFirebase} from '../../services/firebase';
 
 export default function Main() {
   const styles = makeStyles();
+  const [token, setToken] = React.useState('');
 
-  const ket = requestTokenFirebase();
-  console.log('KET:', ket);
+  /*  RECUPERANDO TOKEN DO FIREBASE */
+
+  async function getToken() {
+    const tokenRequest = await requestTokenFirebase();
+    setToken(tokenRequest);
+  }
+
+  React.useEffect(getToken, []);
 
   return (
     <View style={styles.container}>
@@ -30,7 +37,7 @@ export default function Main() {
         <View style={styles.contentToken}>
           <Text style={styles.contentToken.text}>Seu token do firebase:</Text>
           <View style={styles.contentToken.box}>
-            <Text style={styles.contentToken.box.text}>Teste</Text>
+            <Text style={styles.contentToken.box.text}>{token}</Text>
           </View>
         </View>
       </View>
