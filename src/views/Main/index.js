@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Linking} from 'react-native';
 import makeStyles from './styles';
 
 import CallIcon from '../../assets/media/images/call.png';
@@ -41,7 +41,26 @@ export default function Main() {
           </View>
         </View>
       </View>
+
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          style={[styles.buttons.button, styles.buttons.button.colorPink]}>
+          <Text style={styles.buttons.button.text}>Chamada Remota</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.buttons.button, styles.buttons.button.colorBlurple]}>
+          <Text style={styles.buttons.button.text}>Chamada Local</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Container Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity
+          onPress={() => Linking.openURL('https://thompson.dev.br')}
+          style={styles.footer.button}>
+          <Text style={styles.footer.text}>thompson.dev.br</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
