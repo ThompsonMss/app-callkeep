@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "620010560800",
+    "firebase_url": "https://callkeep-acb19.firebaseio.com",
+    "project_id": "callkeep-acb19",
+    "storage_bucket": "callkeep-acb19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620010560800:android:c893535234ee0a92230b45",
+        "android_client_info": {
+          "package_name": "com.callkeep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620010560800-329pq8kfb9ftdvisg3d4muasg2jtlqgd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0OH2MJ4xdS_hvqqgQvoDGiUNE2zfItC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620010560800-329pq8kfb9ftdvisg3d4muasg2jtlqgd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
