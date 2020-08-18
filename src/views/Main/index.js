@@ -8,12 +8,16 @@ import {
   Clipboard,
   ToastAndroid,
   Alert,
+  PermissionsAndroid,
 } from 'react-native';
 import makeStyles from './styles';
 
 import CallIcon from '../../assets/media/images/call.png';
 
 import {requestTokenFirebase} from '../../services/firebase';
+import RNCallKeep from 'react-native-callkeep';
+
+import createUUID from '../../helpers/createUUID';
 
 export default function Main() {
   const styles = makeStyles();
@@ -42,6 +46,96 @@ export default function Main() {
   }
 
   React.useEffect(getToken, []);
+
+  const options = {
+    ios: {
+      appName: 'Nome do meu app',
+    },
+    android: {
+      alertTitle: 'Permissions required',
+      alertDescription: 'This application needs to access your phone accounts',
+      cancelButton: 'Cancel',
+      okButton: 'ok',
+      imageName: 'phone_account_icon',
+      additionalPermissions: [PermissionsAndroid.PERMISSIONS.CALL_PHONE],
+    },
+  };
+
+  RNCallKeep.setup(options).then((accepted) => {
+    RNCallKeep.setAvailable(true);
+  });
+
+  React.useEffect(definirContaTelefonePadrao, []);
+
+  async function definirContaTelefonePadrao() {
+    const status = await RNCallKeep.hasPhoneAccount();
+    if (status == false) {
+      const optionsDefaultNumber = {
+        alertTitle: 'Padrão não definido.',
+        alertDescription: 'Defina a conta de telefone padrão.',
+      };
+
+      RNCallKeep.hasDefaultPhoneAccount(optionsDefaultNumber);
+    }
+  }
+
+  RNCallKeep.addEventListener('answerCall', ({callUUID}) => {
+    console.log('Usuário Atendeu a Chamada: ', callUUID);
+    RNCallKeep.setCurrentCallActive(callUUID);
+  });
+
+  RNCallKeep.addEventListener('endCall', ({callUUID}) => {
+    console.log('Usuário Encerrou a Chamada');
+  });
+
+  RNCallKeep.addEventListener(
+    'didDisplayIncomingCall',
+    ({error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit}) => {
+      // você pode fazer as seguintes ações ao receber este evento:
+      // - iniciar a reprodução de toque se for uma chamada efetuada
+      console.log('Realizando chamda');
+    },
+  );
+
+  RNCallKeep.addEventListener(
+    'didReceiveStartCallAction',
+    ({handle, callUUID, name}) => {
+      console.log('Esse fera aqui mesmo');
+    },
+  );
+
+  RNCallKeep.addEventListener('didPerformDTMFAction', ({digits, callUUID}) => {
+    console.log('Digito: ', digits);
+  });
+
+  function display() {
+    const uuid = createUUID();
+    try {
+      RNCallKeep.displayIncomingCall(
+        uuid,
+        'DEDICADO PRÓPRIO',
+        'Thompson Silva',
+      );
+      RNCallKeep.answerIncomingCall(uuid);
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  }
+
+  function chamar() {
+    const uuid = createUUID();
+    RNCallKeep.startCall(uuid, '+5561993133465', 'Teste Teste');
+  }
+
+  function connectionService() {
+    const status = RNCallKeep.supportConnectionService();
+    Alert.alert('Connection Service disponível: ', status ? 'Sim' : 'Não');
+  }
+
+  async function contaTelefone() {
+    const status = await RNCallKeep.hasPhoneAccount();
+    Alert.alert('Conta Telefone configurada: ', status ? 'Sim' : 'Não');
+  }
 
   return (
     <View style={styles.container}>
@@ -80,6 +174,7 @@ export default function Main() {
           <Text style={styles.buttons.button.text}>Chamada Remota</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => display()}
           style={[styles.buttons.button, styles.buttons.button.colorBlurple]}>
           <Text style={styles.buttons.button.text}>Chamada Local</Text>
         </TouchableOpacity>
