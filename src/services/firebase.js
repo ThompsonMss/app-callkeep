@@ -7,6 +7,17 @@ export async function requestTokenFirebase() {
       await firebase.messaging().requestPermission();
     }
 
+    firebase.notifications().onNotification(async (notification) => {
+      console.log('Entrou aqui: ', notification);
+      // const newNotification = new firebase.notifications.Notification()
+      //   .setNotificationId(notification.notificationId)
+      //   .setTitle(notification.title)
+      //   .setSubtitle(notification.subtitle || "")
+      //   .setBody(notification.body);
+  
+      // await firebase.notifications().displayNotification(newNotification);
+    });
+
     const token = await firebase.messaging().getToken();
     return token;
   } catch (error) {
