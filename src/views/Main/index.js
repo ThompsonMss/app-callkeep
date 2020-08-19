@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import makeStyles from './styles';
 
-import CallIcon from '../../assets/media/images/call.png';
-
 import {requestTokenFirebase} from '../../services/firebase';
 import RNCallKeep from 'react-native-callkeep';
 
@@ -27,6 +25,7 @@ export default function Main() {
 
   async function getToken() {
     const tokenRequest = await requestTokenFirebase();
+
     setToken(tokenRequest);
   }
 
@@ -141,11 +140,6 @@ export default function Main() {
     <View style={styles.container}>
       {/* Container Imagem */}
       <View>
-        <Image
-          source={CallIcon}
-          resizeMode="cover"
-          style={{height: 100, width: 100}}
-        />
         <View style={styles.contentTitle}>
           <Text style={[styles.contentTitle.text, styles.contentTitle.bold]}>
             Call

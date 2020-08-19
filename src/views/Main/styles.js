@@ -68,15 +68,15 @@ export default function makeStyles() {
         },
 
         colorPink: {
-          backgroundColor: '#ff7979',
-          borderWidth: 1,
-          borderColor: '#eb4d4b',
-          borderStyle: 'solid',
-        },
-        colorBlurple: {
           backgroundColor: '#686de0',
           borderWidth: 1,
           borderColor: '#4834d4',
+          borderStyle: 'solid',
+        },
+        colorBlurple: {
+          backgroundColor: '#ff7979',
+          borderWidth: 1,
+          borderColor: '#eb4d4b',
           borderStyle: 'solid',
         },
       },
@@ -88,7 +88,7 @@ export default function makeStyles() {
       bottom: 15,
       alignItems: 'center',
       justifyContent: 'center',
-      
+
       button: {
         height: 50,
         width: '100%',
@@ -98,7 +98,7 @@ export default function makeStyles() {
 
       text: {
         color: '#CCC',
-        fontSize: 17
+        fontSize: 17,
       },
     },
   };
