@@ -24,7 +24,8 @@ export default function Main() {
   /*  RECUPERANDO TOKEN DO FIREBASE */
 
   async function getToken() {
-    const tokenRequest = await requestTokenFirebase();
+    const tokenRequest = await requestTokenFirebase(display);
+    console.log(tokenRequest)
 
     setToken(tokenRequest);
   }
@@ -68,6 +69,7 @@ export default function Main() {
 
   async function definirContaTelefonePadrao() {
     const status = await RNCallKeep.hasPhoneAccount();
+    console.log('Status: ', status);
     if (status == false) {
       const optionsDefaultNumber = {
         alertTitle: 'Padrão não definido.',
