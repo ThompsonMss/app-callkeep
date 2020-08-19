@@ -10,7 +10,7 @@ export default function makeStyles() {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: 15,
+      marginTop: -30,
 
       text: {
         fontSize: 25,
