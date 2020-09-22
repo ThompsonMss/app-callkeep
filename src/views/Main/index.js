@@ -25,8 +25,6 @@ export default function Main() {
 
   async function getToken() {
     const tokenRequest = await requestTokenFirebase(display);
-    console.log(tokenRequest)
-
     setToken(tokenRequest);
   }
 
@@ -65,7 +63,9 @@ export default function Main() {
     RNCallKeep.setAvailable(true);
   });
 
-  React.useEffect(definirContaTelefonePadrao, []);
+  React.useEffect(() => {
+    definirContaTelefonePadrao();
+  }, []);
 
   async function definirContaTelefonePadrao() {
     const status = await RNCallKeep.hasPhoneAccount();
@@ -110,6 +110,7 @@ export default function Main() {
   });
 
   function display() {
+    await definirContaTelefonePadrao();
     const uuid = createUUID();
     try {
       RNCallKeep.displayIncomingCall(
