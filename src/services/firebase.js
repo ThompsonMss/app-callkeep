@@ -8,15 +8,7 @@ export async function requestTokenFirebase(display) {
     }
 
     firebase.notifications().onNotification(async (notification) => {
-      console.log('Entrou aqui: ', notification);
       display();
-      // const newNotification = new firebase.notifications.Notification()
-      //   .setNotificationId(notification.notificationId)
-      //   .setTitle(notification.title)
-      //   .setSubtitle(notification.subtitle || "")
-      //   .setBody(notification.body);
-
-      // await firebase.notifications().displayNotification(newNotification);
     });
 
     const token = await firebase.messaging().getToken();

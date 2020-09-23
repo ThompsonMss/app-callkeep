@@ -22,12 +22,16 @@ export default function Main() {
   const [token, setToken] = React.useState('');
 
   /*  RECUPERANDO TOKEN DO FIREBASE */
-
   async function getToken() {
     const tokenRequest = await requestTokenFirebase(display);
     setToken(tokenRequest);
   }
 
+  React.useEffect(() => {
+    getToken();
+  }, []);
+
+  /*  FUNÇÃO QUE COPIA O TOKEN */
   function copy(_token) {
     if (_token) {
       Clipboard.setString(_token);
@@ -35,16 +39,7 @@ export default function Main() {
     }
   }
 
-  function handleCallRemote() {
-    Alert.alert(
-      'Chamada Remota',
-      "É um serviço para realizar uma 'chamada' online e tempo real que usa o seu token do firebase para localizar seu celular. \n\nVocê vai ser redirecionado para o site do serviço, depois localize e clique no botão 'Ligar' do site para ver a mágica acontencer.",
-      [{text: 'Prosseguir', onPress: () => Linking.openURL('')}],
-    );
-  }
-
-  React.useEffect(getToken, []);
-
+  /* CONFIGURAÇÕES PARA RECUPERAR AS PERMISSÕES DO USUÁRIO - ANDROID */
   const options = {
     ios: {
       appName: 'Nome do meu app',
@@ -63,13 +58,13 @@ export default function Main() {
     RNCallKeep.setAvailable(true);
   });
 
+  /* DEFININDO UMA CONTA DE TELEFONE PARA O APLICATIVO */
   React.useEffect(() => {
     definirContaTelefonePadrao();
   }, []);
 
   async function definirContaTelefonePadrao() {
     const status = await RNCallKeep.hasPhoneAccount();
-    console.log('Status: ', status);
     if (status == false) {
       const optionsDefaultNumber = {
         alertTitle: 'Padrão não definido.',
@@ -80,13 +75,15 @@ export default function Main() {
     }
   }
 
+  /* FUNÇÃO QUE ESCUTA QUANDO SE ATENDE UMA CHAMADA NO CELULAR */
   RNCallKeep.addEventListener('answerCall', ({callUUID}) => {
-    console.log('Usuário Atendeu a Chamada: ', callUUID);
+    console.log('Recebendo uma chamada: ', callUUID);
     RNCallKeep.setCurrentCallActive(callUUID);
   });
 
+  /* FUNÇÃO QUE ESCUTA QUANDO SE ENCERRA UMA CHAMADA NO CELULAR */
   RNCallKeep.addEventListener('endCall', ({callUUID}) => {
-    console.log('Usuário Encerrou a Chamada');
+    console.log('Usuário encerrou a chamada');
   });
 
   RNCallKeep.addEventListener(
@@ -94,28 +91,34 @@ export default function Main() {
     ({error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit}) => {
       // você pode fazer as seguintes ações ao receber este evento:
       // - iniciar a reprodução de toque se for uma chamada efetuada
-      console.log('Realizando chamda');
+      console.log('Realizando chamada.');
     },
   );
 
   RNCallKeep.addEventListener(
     'didReceiveStartCallAction',
-    ({handle, callUUID, name}) => {
-      console.log('Esse fera aqui mesmo');
-    },
+    ({handle, callUUID, name}) => {},
   );
 
+  /* FUNÇÃO QUE ESCUTA QUANDO UMA TECLA É PRESSIONADA */
   RNCallKeep.addEventListener('didPerformDTMFAction', ({digits, callUUID}) => {
-    console.log('Digito: ', digits);
+    console.log('Capturando tecla: ', digits);
   });
 
-  function display() {
+  /* FUNÇÃO QUE EXCECUTA A CHAMADA NO CELULAR */
+  async function display() {
+
+    /* Garantindo que esse telefone setou esse aplicativo como uma conta de telefone */
     await definirContaTelefonePadrao();
+
+    /* Gerando um UUID válido - Geralmente é fornecido pelos próprios serviços VOIP */
     const uuid = createUUID();
+
     try {
+      /* FUNÇÃO QUE GERA A CHAMADA */
       RNCallKeep.displayIncomingCall(
         uuid,
-        'DEDICADO PRÓPRIO',
+        'CHAMADA NATIVA, UHULL!',
         'Thompson Silva',
       );
       RNCallKeep.answerIncomingCall(uuid);
@@ -124,16 +127,19 @@ export default function Main() {
     }
   }
 
+  /* FUNÇÃO PARA REALIZAR UMA CHAMADA - É DIFERENTE DE RECEBER UMA CHAMADA */
   function chamar() {
     const uuid = createUUID();
-    RNCallKeep.startCall(uuid, '+5561993133465', 'Teste Teste');
+    RNCallKeep.startCall(uuid, '+5561999885533', 'Teste Teste');
   }
 
+  /* FUNÇÃO QUE VERIFICA SE O CELULAR TEM SUPORTE PARA ESSA FUNCIONALIDADE DE CHAMADA */
   function connectionService() {
     const status = RNCallKeep.supportConnectionService();
     Alert.alert('Connection Service disponível: ', status ? 'Sim' : 'Não');
   }
 
+    /* FUNÇÃO QUE VERIFICA SE O CELULAR TEM UMA CONTA PADRÃO */
   async function contaTelefone() {
     const status = await RNCallKeep.hasPhoneAccount();
     Alert.alert('Conta Telefone configurada: ', status ? 'Sim' : 'Não');
@@ -165,11 +171,6 @@ export default function Main() {
       </View>
 
       <View style={styles.buttons}>
-        <TouchableOpacity
-          onPress={() => handleCallRemote()}
-          style={[styles.buttons.button, styles.buttons.button.colorPink]}>
-          <Text style={styles.buttons.button.text}>Chamada Remota</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => display()}
           style={[styles.buttons.button, styles.buttons.button.colorBlurple]}>
